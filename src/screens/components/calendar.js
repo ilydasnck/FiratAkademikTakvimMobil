@@ -1,3 +1,5 @@
+//components/calendar.js
+
 import {
   View,
   Text,
@@ -5,9 +7,12 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Linking,
+  Dimensions,
 } from 'react-native';
 import React from 'react';
 import {Agenda, LocaleConfig} from 'react-native-calendars';
+const winWidth = Dimensions.get('window').width;
+const winHeight = Dimensions.get('window').height;
 
 LocaleConfig.locales['tr'] = {
   monthNames: [
@@ -53,22 +58,23 @@ LocaleConfig.locales['tr'] = {
 
 LocaleConfig.defaultLocale = 'tr';
 
-const calendar = () => {
-  // Fonksiyon: Google Takvim'e yönlendir
+const calendar = props => {
+  const {categories} = props;
+  console.log('calendar.js', categories);
+
   const addEventToGoogleCalendar = item => {
     const title = encodeURIComponent(item.name);
     const details = encodeURIComponent(item.data);
-    const startDate = '20241104T090000Z'; // Başlangıç tarihi (örnek)
-    const endDate = '20241104T100000Z'; // Bitiş tarihi (örnek)
+    const startDate = '20241104T090000Z';
+    const endDate = '20241104T100000Z';
 
     const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${startDate}/${endDate}`;
 
-    // Google Takvim URL'sine yönlendirme
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Agenda
         items={{
           '2024-01-01': [{name: 'Yılbaşı', data: 'Tatil', category: 'Genel'}],
@@ -79,67 +85,66 @@ const calendar = () => {
           '2024-04-10': [
             {name: 'Ramazan Bayramı 1. gün', data: 'Tatil', category: 'Genel'},
           ],
-
           '2024-11-06': [
             {name: 'Genel Kategorisi', data: 'Tatil', category: 'Genel'},
           ],
           '2024-11-07': [
-            {name: 'Tıp Kategorisi', data: 'Tatil', category: 'TipF'},
+            {name: 'Tıp Kategorisi', data: 'Tatil', category: 'Tıp Fakültesi'},
           ],
           '2024-11-08': [
-            {name: 'Yaz Okulu Kategorisi', data: 'Tatil', category: 'YazOkulu'},
-          ],
-
-          '2024-10-29': [
             {
-              name: 'Cumhuriyet Bayramı',
+              name: 'Yaz Okulu Kategorisi',
               data: 'Tatil',
-              category: 'Genel',
+              category: 'Yaz Okulu',
             },
+          ],
+          '2024-10-29': [
+            {name: 'Cumhuriyet Bayramı', data: 'Tatil', category: 'Genel'},
           ],
           '2024-10-30': [
             {
               name: 'Tıp Konferansı',
               data: 'İç Hastalıklar',
-              category: 'TipF',
+              category: 'Tıp Fakültesi',
             },
           ],
-          '2024-12-31': [
-            {
-              name: 'Yılbaşı',
-              data: 'Tatil',
-              category: 'Genel',
-            },
-          ],
+          '2024-12-31': [{name: 'Yılbaşı', data: 'Tatil', category: 'Genel'}],
         }}
         minDate={'2012-01-01'}
         maxDate={'2030-01-01'}
-        renderItem={item => (
-          <TouchableOpacity
-            style={[
-              styles.item,
-              {
-                backgroundColor:
-                  item.category === 'YazOkulu'
-                    ? 'lightyellow'
-                    : item.category === 'TipF'
-                    ? 'lightgreen'
-                    : 'lightblue',
-              },
-            ]}
-            onPress={() => addEventToGoogleCalendar(item)}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemData}>{item.data}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={item => {
+          // Display item only if its category is included in the categories prop
+          if (categories.includes(item.category)) {
+            return (
+              <TouchableOpacity
+                style={[
+                  styles.item,
+                  {
+                    backgroundColor:
+                      item.category === 'Yaz Okulu'
+                        ? 'lightyellow'
+                        : item.category === 'Tıp Fakültesi'
+                        ? 'lightgreen'
+                        : 'lightblue',
+                  },
+                ]}
+                onPress={() => addEventToGoogleCalendar(item)}>
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.itemData}>{item.data}</Text>
+              </TouchableOpacity>
+            );
+          }
+          return null; // Do not render if category does not match
+        }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: winWidth,
+    height: winHeight * 0.7,
   },
   itemName: {
     fontWeight: 'bold',
