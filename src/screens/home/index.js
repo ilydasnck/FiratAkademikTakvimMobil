@@ -1,5 +1,3 @@
-//home/index.js
-
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Calendar from '../components/calendar';
@@ -10,7 +8,9 @@ const winWidth = Dimensions.get('window').width;
 const winHeight = Dimensions.get('window').height;
 
 const index = () => {
-  const [categories, setCategories] = useState([]);
+  const [items, setItems] = useState({}); // Etkinlik verilerini tutan state
+
+  const [categories, setCategories] = useState([]); // categories state'ini burada tanımladık
 
   const data = [
     {key: 'Genel', value: 'Genel'},
@@ -35,21 +35,26 @@ const index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.selectListWrapper}>
+        <Text style={styles.title}>Akademik Takvim</Text>
         <MultipleSelectList
           style={styles.selectList}
-          setSelected={val => setCategories(val)}
+          placeholder="Seçim yapın"
+          searchPlaceholder="ara"
+          label="Seçilenler"
+          searchText="Ara"
+          setSelected={val => setCategories(val)} // Burada setCategories kullanılıyor
           data={data}
           save="value"
           boxStyles={styles.boxStyles}
           search={true}
-          inputPlaceholder="Kategori seçin" // Her zaman bu placeholderı gösterir
-          inputStyles={styles.inputStyles} // Varsayılan olarak bir placeholder gösterir
+          inputPlaceholder="Kategori seçin" // Her zaman bu placeholder'ı gösterir
           dropdownTextStyles={styles.dropdownTextStyles}
           dropdownStyles={styles.dropdownStyles}
+          badgeStyles={styles.badgeStyles}
         />
       </View>
       <Calendar categories={categories} style={styles.child1} />
-      <EkleButton />
+      <EkleButton setItems={setItems} />
     </View>
   );
 };
@@ -65,15 +70,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: winWidth * 0.05,
   },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
   selectList: {
     width: winWidth * 0.8,
     backgroundColor: '#fff',
   },
   boxStyles: {
-    width: winWidth * 0.8,
+    width: winWidth * 0.9,
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#ddd',
   },
   dropdownTextStyles: {
     fontSize: winWidth * 0.04,
@@ -82,12 +93,20 @@ const styles = StyleSheet.create({
   },
   dropdownStyles: {
     maxHeight: winHeight * 0.25,
-    width: winWidth * 0.8,
+    width: winWidth * 0.9,
   },
   inputStyles: {
     fontSize: winWidth * 0.04,
     color: '#333',
     fontWeight: '500',
+  },
+  badgeStyles: {
+    backgroundColor: '#808080',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 15,
+    color: 'white',
+    fontSize: 14,
   },
 });
 

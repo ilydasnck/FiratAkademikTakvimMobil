@@ -1,3 +1,5 @@
+// components/EkleButton.js
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -5,31 +7,49 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  Button,
 } from 'react-native';
-import React, {useState} from 'react';
+import {MultipleSelectList} from 'react-native-dropdown-select-list'; // Kategori seçimi için
 
-const EkleButton = () => {
-  // State tanımları
+const EkleButton = ({setItems}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [items, setItems] = useState({});
+  const [categories, setCategories] = useState([]); // Kategori seçimi için state
 
-  // Etkinlik ekleme fonksiyonu
+  const categoryData = [
+    {key: 'Genel', value: 'Genel'},
+    {key: 'Tıp Fakültesi', value: 'Tıp Fakültesi'},
+    {key: 'Dis Hekimligi', value: 'Diş Hekimliği Fakültesi'},
+    {key: 'Yaz Okulu', value: 'Yaz Okulu'},
+    {
+      key: 'KurumiciYatayGecis',
+      value: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
+    },
+    {
+      key: 'KurumlararasıYatayGecis',
+      value: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
+    },
+  ];
+
   const addEvent = () => {
-    if (title && date && time) {
-      const newEvent = {name: title, data: description, category: 'Genel'};
+    if (title && date && time && categories.length > 0) {
+      const newEvent = {
+        name: title,
+        description: description,
+        date,
+        time,
+        category: categories,
+      };
       setItems(prevItems => {
-        const updatedItems = {...prevItems};
+        const updatedItems = {...prevItems}; // önceki etkinlikleri kopyala
         if (updatedItems[date]) {
-          updatedItems[date].push(newEvent);
+          updatedItems[date].push(newEvent); // aynı tarih varsa yeni etkinliği ekle
         } else {
-          updatedItems[date] = [newEvent];
+          updatedItems[date] = [newEvent]; // yeni tarih için etkinlik oluştur
         }
-        return updatedItems;
+        return updatedItems; // güncellenmiş etkinlikleri döndür
       });
 
       // Alanları temizle
@@ -37,11 +57,13 @@ const EkleButton = () => {
       setDescription('');
       setDate('');
       setTime('');
+      setCategories([]);
       setModalVisible(false); // Modalı kapat
     } else {
-      alert('Lütfen tüm alanları doldurun.');
+      alert('Lütfen tüm alanları doldurun ve bir kategori seçin.');
     }
   };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -49,6 +71,7 @@ const EkleButton = () => {
         onPress={() => setModalVisible(true)}>
         <Text style={styles.buttonText}>Etkinlik Ekle</Text>
       </TouchableOpacity>
+
       {/* Modal */}
       <Modal
         visible={isModalVisible}
@@ -84,7 +107,18 @@ const EkleButton = () => {
               onChangeText={setTime}
               placeholder="HH:MM"
             />
-            <TouchableOpacity style={styles.button2} onPress={() => addEvent}>
+
+            {/* Kategori Seçimi */}
+            <Text>Kategori Seçin:</Text>
+            <MultipleSelectList
+              setSelected={setCategories}
+              data={categoryData}
+              label="Kategori"
+              save="value"
+              placeholder="Kategori Seçin"
+            />
+
+            <TouchableOpacity style={styles.button2} onPress={addEvent}>
               <Text style={styles.buttonText}>Etkinliği Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -122,11 +156,25 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     width: 300,
-    marginTop: 20,
+    marginBottom: 50,
   },
   modalContainer: {
     alignItems: 'center',
     marginTop: 100,
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingLeft: 10,
+    borderRadius: 5,
   },
 });
 
