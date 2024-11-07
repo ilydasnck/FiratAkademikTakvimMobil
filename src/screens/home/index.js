@@ -35,7 +35,10 @@ const index = () => {
   return (
     <View style={styles.container}>
       <View style={styles.selectListWrapper}>
-        <Text style={styles.title}>Akademik Takvim</Text>
+        <View style={styles.box}>
+          <Text style={styles.title}>Akademik Takvim</Text>
+        </View>
+
         <MultipleSelectList
           style={styles.selectList}
           placeholder="Seçim yapın"
@@ -68,13 +71,20 @@ const styles = StyleSheet.create({
     width: winWidth,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: winWidth * 0.05,
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  box: {
+    backgroundColor: '#cf2525',
+    width: winWidth,
     marginBottom: 20,
-    color: '#333',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 70,
   },
   selectList: {
     width: winWidth * 0.8,

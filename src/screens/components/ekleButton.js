@@ -15,7 +15,6 @@ const EkleButton = ({setItems}) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
   const [categories, setCategories] = useState([]); // Kategori seçimi için state
 
   const categoryData = [
@@ -34,13 +33,11 @@ const EkleButton = ({setItems}) => {
   ];
 
   const addEvent = () => {
-    if (title && date && time && categories.length > 0) {
+    if (title && date && categories.length > 0) {
       const newEvent = {
         name: title,
         description: description,
-        date,
-        time,
-        category: categories,
+        category: categories[0],
       };
       setItems(prevItems => {
         const updatedItems = {...prevItems}; // önceki etkinlikleri kopyala
@@ -56,7 +53,6 @@ const EkleButton = ({setItems}) => {
       setTitle('');
       setDescription('');
       setDate('');
-      setTime('');
       setCategories([]);
       setModalVisible(false); // Modalı kapat
     } else {
@@ -100,14 +96,6 @@ const EkleButton = ({setItems}) => {
               onChangeText={setDate}
               placeholder="YYYY-MM-DD"
             />
-            <Text>Saat:</Text>
-            <TextInput
-              style={styles.input}
-              value={time}
-              onChangeText={setTime}
-              placeholder="HH:MM"
-            />
-
             {/* Kategori Seçimi */}
             <Text>Kategori Seçin:</Text>
             <MultipleSelectList

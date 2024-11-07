@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Agenda, LocaleConfig} from 'react-native-calendars';
+import EkleButton from '../components/ekleButton';
 
 const winWidth = Dimensions.get('window').width;
 const winHeight = Dimensions.get('window').height;
