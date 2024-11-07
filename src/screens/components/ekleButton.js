@@ -143,7 +143,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     width: 380,
-    marginBottom: 20,
+    marginBottom: 20, // Varsayılan margin-bottom
+    position: 'absolute', // Butonu sabitliyoruz
+    bottom: 30, // Sayfanın altından 30 piksel boşluk bırakıyoruz
   },
   buttonText: {
     color: 'white',
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     width: 300,
-    marginBottom: 50,
+    marginTop: 30,
   },
   modalContainer: {
     alignItems: 'center',
