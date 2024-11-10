@@ -1,5 +1,3 @@
-// components/calendar.js
-
 import {
   View,
   Text,
@@ -8,12 +6,10 @@ import {
   Dimensions,
   Linking,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Agenda, LocaleConfig} from 'react-native-calendars';
-import EkleButton from '../components/ekleButton';
 
 const winWidth = Dimensions.get('window').width;
-const winHeight = Dimensions.get('window').height;
 
 LocaleConfig.locales['tr'] = {
   monthNames: [
@@ -45,68 +41,32 @@ LocaleConfig.locales['tr'] = {
     'Ara',
   ],
   dayNames: [
+    'Pazar',
     'Pazartesi',
     'Salı',
     'Çarşamba',
     'Perşembe',
     'Cuma',
     'Cumartesi',
-    'Pazar',
   ],
-  dayNamesShort: ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'],
+  dayNamesShort: ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'],
   today: 'Bugün',
 };
-
 LocaleConfig.defaultLocale = 'tr';
 
-const Calendar = props => {
-  const {categories} = props;
-  const [events, setEvents] = useState({});
-  const allEvents = {
-    '2024-01-01': [{name: 'Yılbaşı', data: 'Tatil', category: 'Genel'}],
-    '2024-03-11': [{name: 'Ramazan başlangıcı', category: 'Genel'}],
-    '2024-04-09': [
-      {name: 'Ramazan Bayramı Arifesi', data: 'Tatil', category: 'Genel'},
-    ],
-    '2024-04-10': [
-      {name: 'Ramazan Bayramı 1. gün', data: 'Tatil', category: 'Genel'},
-    ],
-    '2024-11-06': [
-      {name: 'Genel Kategorisi', data: 'Tatil', category: 'Genel'},
-    ],
-    '2024-11-07': [
-      {name: 'Tıp Kategorisi', data: 'Tatil', category: 'Tıp Fakültesi'},
-    ],
-    '2024-11-08': [
-      {name: 'Yaz Okulu Kategorisi', data: 'Tatil', category: 'Yaz Okulu'},
-    ],
-    '2024-10-29': [
-      {name: 'Cumhuriyet Bayramı', data: 'Tatil', category: 'Genel'},
-    ],
-    '2024-10-30': [
-      {
-        name: 'Tıp Konferansı',
-        data: 'İç Hastalıklar',
-        category: 'Tıp Fakültesi',
-      },
-    ],
-    '2024-12-31': [{name: 'Yılbaşı', data: 'Tatil', category: 'Genel'}],
-  };
-
-  useEffect(() => {
-    // categories değiştiğinde etkinlikleri filtreleyelim
-    const filteredEvents = {};
-    for (let date in allEvents) {
-      const filtered = allEvents[date].filter(event =>
-        categories.includes(event.category),
-      );
-      if (filtered.length > 0) {
-        filteredEvents[date] = filtered;
-      }
+const Calendar = ({categories, items}) => {
+  // Burada, kullanıcının seçtiği kategorilere göre etkinlikleri filtreliyoruz
+  const filteredEvents = Object.keys(items).reduce((filtered, date) => {
+    const eventsForDate = items[date].filter(
+      event => categories.length === 0 || categories.includes(event.category),
+    );
+    if (eventsForDate.length > 0) {
+      filtered[date] = eventsForDate;
     }
-    setEvents(filteredEvents); // güncellenmiş etkinlikleri set edelim
-  }, [categories]);
+    return filtered;
+  }, {});
 
+  // Etkinliği Google Takvime eklemek için URL oluşturma
   const addEventToGoogleCalendar = item => {
     const title = encodeURIComponent(item.name);
     const details = encodeURIComponent(item.data);
@@ -118,47 +78,48 @@ const Calendar = props => {
   };
 
   return (
-    <View style={styles.container}>
-      <Agenda
-        items={events} // sadece seçilen kategorilere ait etkinlikleri gösteriyoruz
-        minDate={'2012-01-01'}
-        maxDate={'2030-01-01'}
-        renderItem={item => {
-          return (
-            <TouchableOpacity
-              style={[
-                styles.item,
-                {
-                  backgroundColor:
-                    item.category === 'Yaz Okulu'
-                      ? 'lightyellow'
-                      : item.category === 'Tıp Fakültesi'
-                      ? 'lightgreen'
-                      : 'lightblue',
-                },
-              ]}
-              onPress={() => addEventToGoogleCalendar(item)}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemData}>{item.data}</Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
-    </View>
+    <Agenda
+      items={filteredEvents}
+      renderItem={(item, firstItemInDay) => (
+        <View>
+          <TouchableOpacity
+            style={[
+              styles.item,
+              {
+                backgroundColor:
+                  item.category === 'Genel'
+                    ? '#a890f3'
+                    : item.category === 'Tıp Fakültesi'
+                    ? '#ed8bbb'
+                    : item.category === 'Diş Hekimliği Fakültesi'
+                    ? '#ffb981'
+                    : item.category === 'Yaz Okulu'
+                    ? '#c2f5a2'
+                    : item.category ===
+                      'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş'
+                    ? '#90f3d9'
+                    : item.category ===
+                      'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş'
+                    ? '#c6b3bd'
+                    : 'lightblue',
+              },
+            ]}
+            onPress={() => addEventToGoogleCalendar(item)}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemData}>{item.data}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      renderEmptyData={() => (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyMessage}>Etkinlik Yok</Text>
+        </View>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: winWidth,
-    height: winHeight * 0.7,
-  },
-  itemName: {
-    fontWeight: 'bold',
-  },
-  itemData: {
-    fontSize: 15,
-  },
   item: {
     backgroundColor: 'lightblue',
     flex: 1,
@@ -167,6 +128,24 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 25,
     paddingBottom: 20,
+  },
+  itemTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  itemDescription: {
+    fontSize: 14,
+    color: '#333',
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -5,12 +5,10 @@ import {MultipleSelectList} from 'react-native-dropdown-select-list';
 import EkleButton from '../components/ekleButton';
 
 const winWidth = Dimensions.get('window').width;
-const winHeight = Dimensions.get('window').height;
 
-const index = () => {
-  const [items, setItems] = useState({}); // Etkinlik verilerini tutan state
-
-  const [categories, setCategories] = useState([]); // categories state'ini burada tanımladık
+const Index = () => {
+  const [items, setItems] = useState({});
+  const [categories, setCategories] = useState([]);
 
   const data = [
     {key: 'Genel', value: 'Genel'},
@@ -27,10 +25,55 @@ const index = () => {
     },
   ];
 
-  // categories değiştiğinde konsolda güncel kategori listesini göstermek için useEffect kullanıyoruz
   useEffect(() => {
-    console.log('Selected categories:', categories);
-  }, [categories]);
+    // Burada, önceden kaydedilmiş etkinlikleri simüle ediyoruz.
+    const existingEvents = {
+      '2024-11-12': [
+        {
+          name: 'Tıp Fakültesi Etkinliği',
+          category: 'Tıp Fakültesi',
+          description: 'Tıp Fakültesi etkinliği açıklaması',
+        },
+      ],
+      '2024-11-13': [
+        {
+          name: 'Yaz Okulu Etkinliği',
+          category: 'Yaz Okulu',
+          description: 'Yaz okulu etkinliği açıklaması',
+        },
+      ],
+      '2024-11-14': [
+        {
+          name: 'Diş Hekimliği Konferans',
+          description: 'Konferans',
+          category: 'Diş Hekimliği Fakültesi',
+        },
+      ],
+      '2024-11-15': [
+        {
+          name: 'Kurumiçi yatay geçiş başvuru',
+          description: 'Başvuru',
+          category: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
+        },
+      ],
+      '2024-11-16': [
+        {
+          name: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş Başvuru',
+          description: 'Başvuru',
+          category:
+            'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
+        },
+      ],
+      '2024-11-16': [
+        {
+          name: 'Tatil',
+          description: 'Genel',
+          category: 'Genel',
+        },
+      ],
+    };
+    setItems(existingEvents);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -38,25 +81,19 @@ const index = () => {
         <View style={styles.box}>
           <Text style={styles.title}>Akademik Takvim</Text>
         </View>
-
         <MultipleSelectList
-          style={styles.selectList}
-          placeholder="Seçim yapın"
-          searchPlaceholder="ara"
-          label="Seçilenler"
-          searchText="Ara"
-          setSelected={val => setCategories(val)} // Burada setCategories kullanılıyor
+          setSelected={val => setCategories(val)}
           data={data}
           save="value"
-          boxStyles={styles.boxStyles}
-          search={true}
-          inputPlaceholder="Kategori seçin" // Her zaman bu placeholder'ı gösterir
+          search
+          placeholder="Kategori seçin"
+          badgeStyles={styles.badgeStyles}
           dropdownTextStyles={styles.dropdownTextStyles}
           dropdownStyles={styles.dropdownStyles}
-          badgeStyles={styles.badgeStyles}
+          boxStyles={styles.boxStyles}
         />
       </View>
-      <Calendar categories={categories} style={styles.child1} />
+      <Calendar categories={categories} items={items} />
       <EkleButton setItems={setItems} />
     </View>
   );
@@ -66,11 +103,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  child1: {},
   selectListWrapper: {
     width: winWidth,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 22,
@@ -86,38 +121,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 70,
   },
-  selectList: {
-    width: winWidth * 0.8,
-    backgroundColor: '#fff',
-  },
   boxStyles: {
     width: winWidth * 0.9,
     backgroundColor: '#fff',
-    borderWidth: 1,
     borderColor: '#ddd',
   },
   dropdownTextStyles: {
     fontSize: winWidth * 0.04,
     color: '#333',
-    fontWeight: '500',
   },
   dropdownStyles: {
-    maxHeight: winHeight * 0.25,
+    maxHeight: 300,
     width: winWidth * 0.9,
-  },
-  inputStyles: {
-    fontSize: winWidth * 0.04,
-    color: '#333',
-    fontWeight: '500',
   },
   badgeStyles: {
     backgroundColor: '#808080',
     paddingHorizontal: 12,
-    paddingVertical: 5,
     borderRadius: 15,
     color: 'white',
-    fontSize: 14,
   },
 });
 
-export default index;
+export default Index;

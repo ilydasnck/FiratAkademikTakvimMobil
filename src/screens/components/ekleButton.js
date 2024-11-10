@@ -1,4 +1,3 @@
-// components/EkleButton.js
 import React, {useState} from 'react';
 import {
   View,
@@ -8,14 +7,14 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import {MultipleSelectList} from 'react-native-dropdown-select-list'; // Kategori seçimi için
+import {SelectList} from 'react-native-dropdown-select-list';
 
 const EkleButton = ({setItems}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [categories, setCategories] = useState([]); // Kategori seçimi için state
+  const [categories, setCategories] = useState([]);
 
   const categoryData = [
     {key: 'Genel', value: 'Genel'},
@@ -36,25 +35,23 @@ const EkleButton = ({setItems}) => {
     if (title && date && categories.length > 0) {
       const newEvent = {
         name: title,
-        description: description,
+        description,
         category: categories[0],
       };
       setItems(prevItems => {
-        const updatedItems = {...prevItems}; // önceki etkinlikleri kopyala
+        const updatedItems = {...prevItems};
         if (updatedItems[date]) {
-          updatedItems[date].push(newEvent); // aynı tarih varsa yeni etkinliği ekle
+          updatedItems[date].push(newEvent);
         } else {
-          updatedItems[date] = [newEvent]; // yeni tarih için etkinlik oluştur
+          updatedItems[date] = [newEvent];
         }
-        return updatedItems; // güncellenmiş etkinlikleri döndür
+        return updatedItems;
       });
-
-      // Alanları temizle
       setTitle('');
       setDescription('');
       setDate('');
       setCategories([]);
-      setModalVisible(false); // Modalı kapat
+      setModalVisible(false);
     } else {
       alert('Lütfen tüm alanları doldurun ve bir kategori seçin.');
     }
@@ -62,13 +59,14 @@ const EkleButton = ({setItems}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Etkinlik Ekle</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonKonum}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText2}>+</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Modal */}
       <Modal
         visible={isModalVisible}
         animationType="slide"
@@ -96,24 +94,23 @@ const EkleButton = ({setItems}) => {
               onChangeText={setDate}
               placeholder="YYYY-MM-DD"
             />
-            {/* Kategori Seçimi */}
             <Text>Kategori Seçin:</Text>
-            <MultipleSelectList
+            <SelectList
               setSelected={setCategories}
               data={categoryData}
-              label="Kategori"
               save="value"
               placeholder="Kategori Seçin"
             />
-
-            <TouchableOpacity style={styles.button2} onPress={addEvent}>
-              <Text style={styles.buttonText}>Etkinliği Ekle</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button2}
-              onPress={() => setModalVisible(false)}>
-              <Text style={styles.buttonText}>İptal</Text>
-            </TouchableOpacity>
+            <View style={styles.yanyana}>
+              <TouchableOpacity style={styles.button2} onPress={addEvent}>
+                <Text style={styles.buttonText}>Etkinliği Ekle</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => setModalVisible(false)}>
+                <Text style={styles.buttonText}>İptal</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -122,35 +119,49 @@ const EkleButton = ({setItems}) => {
 };
 
 const styles = StyleSheet.create({
+  yanyana: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
   container: {
     flex: 1,
   },
   button: {
-    backgroundColor: '#cf2525',
-    padding: 10,
-    borderRadius: 5,
-    alignSelf: 'center',
-    width: 380,
-    marginBottom: 20, // Varsayılan margin-bottom
-    position: 'absolute', // Butonu sabitliyoruz
-    bottom: 30, // Sayfanın altından 30 piksel boşluk bırakıyoruz
+    width: 60, // Kare yapmak için genişlik
+    height: 60, // Kare yapmak için yükseklik
+    backgroundColor: 'grey', // Arka plan rengi (isteğe bağlı)
+    justifyContent: 'center', // Dikey merkezleme
+    alignItems: 'center', // Yatay merkezleme
+    borderRadius: 8, // Köşeleri yuvarlatmak için (isteğe bağlı)
+  },
+  buttonKonum: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    height: '90%',
+    marginRight: 20,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    alignSelf: 'center',
+  },
+  buttonText2: {
+    fontSize: 24, // Artı işaretinin boyutu
+    color: '#fff', // Artı işaretinin rengi
+    fontWeight: 'bold', // Artı işaretini kalın yapmak için
   },
   button2: {
     backgroundColor: '#cf2525',
     padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
     borderRadius: 5,
     alignSelf: 'center',
-    width: 300,
-    marginTop: 30,
+    marginTop: 20,
   },
   modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
   },
   modalContent: {
     width: '80%',
@@ -163,7 +174,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 15,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
     borderRadius: 5,
   },
 });
