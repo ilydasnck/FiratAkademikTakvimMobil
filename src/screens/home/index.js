@@ -18,6 +18,7 @@ const Index = () => {
     {
       key: 'KurumiciYatayGecis',
       value: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
+      data: 'Başvurmayı unutma',
     },
     {
       key: 'KurumlararasıYatayGecis',
@@ -28,11 +29,20 @@ const Index = () => {
   useEffect(() => {
     // Burada, önceden kaydedilmiş etkinlikleri simüle ediyoruz.
     const existingEvents = {
+      '2024-01-01': [
+        {
+          name: 'Tıp Fakültesi Etkinliği',
+          category: 'Tıp Fakültesi',
+          description: 'Tıp Fakültesi etkinliği açıklaması',
+          data: 'Açıklama',
+        },
+      ],
       '2024-11-12': [
         {
           name: 'Tıp Fakültesi Etkinliği',
           category: 'Tıp Fakültesi',
           description: 'Tıp Fakültesi etkinliği açıklaması',
+          data: 'Açıklama',
         },
       ],
       '2024-11-13': [
@@ -64,7 +74,7 @@ const Index = () => {
             'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
         },
       ],
-      '2024-11-16': [
+      '2024-11-17': [
         {
           name: 'Tatil',
           description: 'Genel',
@@ -85,7 +95,7 @@ const Index = () => {
           setSelected={val => setCategories(val)}
           data={data}
           save="value"
-          search
+          searchPlaceholder="ara"
           placeholder="Kategori seçin"
           badgeStyles={styles.badgeStyles}
           dropdownTextStyles={styles.dropdownTextStyles}
@@ -94,7 +104,9 @@ const Index = () => {
         />
       </View>
       <Calendar categories={categories} items={items} />
-      <EkleButton setItems={setItems} />
+      <View style={{height: '15%'}}>
+        <EkleButton setItems={setItems} style={{flex: 0.2}} />
+      </View>
     </View>
   );
 };
@@ -124,7 +136,7 @@ const styles = StyleSheet.create({
   boxStyles: {
     width: winWidth * 0.9,
     backgroundColor: '#fff',
-    borderColor: '#ddd',
+    borderColor: '#ddf',
   },
   dropdownTextStyles: {
     fontSize: winWidth * 0.04,

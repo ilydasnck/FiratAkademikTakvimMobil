@@ -96,6 +96,7 @@ const EkleButton = ({setItems}) => {
             />
             <Text>Kategori Seçin:</Text>
             <SelectList
+              style={styles.kategori}
               setSelected={setCategories}
               data={categoryData}
               save="value"
@@ -127,27 +128,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    width: 60, // Kare yapmak için genişlik
-    height: 60, // Kare yapmak için yükseklik
-    backgroundColor: 'grey', // Arka plan rengi (isteğe bağlı)
-    justifyContent: 'center', // Dikey merkezleme
-    alignItems: 'center', // Yatay merkezleme
-    borderRadius: 8, // Köşeleri yuvarlatmak için (isteğe bağlı)
+    width: 60,
+    height: 60,
+    backgroundColor: 'grey',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
   },
   buttonKonum: {
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-    height: '90%',
-    marginRight: 20,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
   },
   buttonText2: {
-    fontSize: 24, // Artı işaretinin boyutu
-    color: '#fff', // Artı işaretinin rengi
-    fontWeight: 'bold', // Artı işaretini kalın yapmak için
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
   },
   button2: {
     backgroundColor: '#cf2525',
@@ -159,9 +161,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   modalContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    flex: 1,
   },
   modalContent: {
     width: '80%',
@@ -170,6 +172,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 15,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  kategori: {
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
