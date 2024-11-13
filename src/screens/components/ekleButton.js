@@ -8,13 +8,15 @@ import {
   TextInput,
 } from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const EkleButton = ({setItems}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const categoryData = [
     {key: 'Genel', value: 'Genel'},
@@ -30,6 +32,13 @@ const EkleButton = ({setItems}) => {
       value: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
     },
   ];
+
+  const formatDate = date =>
+    new Intl.DateTimeFormat('tr-TR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(date);
 
   const addEvent = () => {
     if (title && date && categories.length > 0) {
@@ -49,12 +58,18 @@ const EkleButton = ({setItems}) => {
       });
       setTitle('');
       setDescription('');
-      setDate('');
+      setDate(null);
       setCategories([]);
       setModalVisible(false);
     } else {
       alert('Lütfen tüm alanları doldurun ve bir kategori seçin.');
     }
+  };
+
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(Platform.OS === 'ios' ? true : false);
+    setDate(currentDate);
   };
 
   return (
@@ -88,12 +103,22 @@ const EkleButton = ({setItems}) => {
               placeholder="Açıklama"
             />
             <Text>Tarih:</Text>
-            <TextInput
-              style={styles.input}
-              value={date}
-              onChangeText={setDate}
-              placeholder="YYYY-MM-DD"
-            />
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <TextInput
+                style={styles.input}
+                value={date ? formatDate(date) : ''}
+                editable={false}
+                placeholder="Etkinlik Tarihi"
+              />
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={date || new Date()}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
             <Text>Kategori Seçin:</Text>
             <SelectList
               style={styles.kategori}

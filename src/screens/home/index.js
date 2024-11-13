@@ -1,27 +1,28 @@
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Calendar from '../components/calendar';
-import {MultipleSelectList} from 'react-native-dropdown-select-list';
+import DropDownPicker from 'react-native-dropdown-picker';
 import EkleButton from '../components/ekleButton';
 
 const winWidth = Dimensions.get('window').width;
 
 const Index = () => {
   const [items, setItems] = useState({});
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]); // categories bir dizi olarak tanımlandı
+  const [isOpen, setIsOpen] = useState(false);
 
   const data = [
-    {key: 'Genel', value: 'Genel'},
-    {key: 'Tıp Fakültesi', value: 'Tıp Fakültesi'},
-    {key: 'Dis Hekimligi', value: 'Diş Hekimliği Fakültesi'},
-    {key: 'Yaz Okulu', value: 'Yaz Okulu'},
+    {label: 'Genel', value: 'Genel'},
+    {label: 'Tıp Fakültesi', value: 'Tıp Fakültesi'},
+    {label: 'Dis Hekimligi', value: 'Diş Hekimliği Fakültesi'},
+    {label: 'Yaz Okulu', value: 'Yaz Okulu'},
     {
-      key: 'KurumiciYatayGecis',
+      label: 'KurumiciYatayGecis',
       value: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
       data: 'Başvurmayı unutma',
     },
     {
-      key: 'KurumlararasıYatayGecis',
+      label: 'KurumlararasıYatayGecis',
       value: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
     },
   ];
@@ -91,17 +92,30 @@ const Index = () => {
         <View style={styles.box}>
           <Text style={styles.title}>Akademik Takvim</Text>
         </View>
-        <MultipleSelectList
-          setSelected={val => setCategories(val)}
-          data={data}
-          save="value"
-          searchPlaceholder="ara"
-          placeholder="Kategori seçin"
-          badgeStyles={styles.badgeStyles}
-          dropdownTextStyles={styles.dropdownTextStyles}
-          dropdownStyles={styles.dropdownStyles}
-          boxStyles={styles.boxStyles}
-        />
+        <View style={{width: '95%'}}>
+          <DropDownPicker
+            items={data} // items, label ve value içermeli
+            open={isOpen}
+            setOpen={setIsOpen}
+            value={categories} // Kategoriler burada seçili değerler olacak
+            setValue={setCategories} // Seçilen değerleri güncellemek için
+            multiple={true} // Çoklu seçim aktif
+            mode="BADGE"
+            placeholder="Kategori seçin"
+            showBadgeDot={false}
+            dropdownTextStyles={styles.dropdownTextStyles}
+            dropdownStyles={styles.dropdownStyles}
+            boxStyles={styles.boxStyles}
+            searchPlaceholder="Ara"
+            showTickIcon={true}
+            showArrowIcon={true}
+            disableBorderRadius={false}
+            autoScroll
+            onChangeValue={value => setCategories(value)} // Seçilen kategorileri güncelle
+            badgeColors={'grey'} // Seçilen kategorilere göre renkleri atama
+            badgeTextStyle={{color: 'white'}}
+          />
+        </View>
       </View>
       <Calendar categories={categories} items={items} />
       <View style={{height: '15%'}}>
@@ -134,7 +148,7 @@ const styles = StyleSheet.create({
     height: 70,
   },
   boxStyles: {
-    width: winWidth * 0.9,
+    width: '90%',
     backgroundColor: '#fff',
     borderColor: '#ddf',
   },
@@ -145,12 +159,6 @@ const styles = StyleSheet.create({
   dropdownStyles: {
     maxHeight: 300,
     width: winWidth * 0.9,
-  },
-  badgeStyles: {
-    backgroundColor: '#808080',
-    paddingHorizontal: 12,
-    borderRadius: 15,
-    color: 'white',
   },
 });
 
