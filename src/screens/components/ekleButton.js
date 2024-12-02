@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Platform,
 } from 'react-native';
 import {SelectList} from 'react-native-dropdown-select-list';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -14,7 +15,7 @@ const EkleButton = ({setItems}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState(null);
+  const [date, setDate] = useState(new Date()); // Date nesnesi olarak başlatıyoruz
   const [categories, setCategories] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -32,7 +33,6 @@ const EkleButton = ({setItems}) => {
       value: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
     },
   ];
-
   const formatDate = date =>
     new Intl.DateTimeFormat('tr-TR', {
       year: 'numeric',
@@ -41,24 +41,34 @@ const EkleButton = ({setItems}) => {
     }).format(date);
 
   const addEvent = () => {
+    // Get the current date and remove the time part for accurate comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Check if the selected date is in the past
+    if (date < today) {
+      alert('Geçmiş bir tarihe etkinlik ekleyemezsiniz.');
+      return; // Exit the function if the date is in the past
+    }
     if (title && date && categories.length > 0) {
       const newEvent = {
         name: title,
         description,
-        category: categories[0],
+        category: categories,
       };
       setItems(prevItems => {
         const updatedItems = {...prevItems};
-        if (updatedItems[date]) {
-          updatedItems[date].push(newEvent);
+        const dateString = date.toISOString().split('T')[0]; // Tarih formatını YYYY-MM-DD yapıyoruz
+        if (updatedItems[dateString]) {
+          updatedItems[dateString].push(newEvent);
         } else {
-          updatedItems[date] = [newEvent];
+          updatedItems[dateString] = [newEvent];
         }
         return updatedItems;
       });
       setTitle('');
       setDescription('');
-      setDate(null);
+      setDate(new Date());
       setCategories([]);
       setModalVisible(false);
     } else {
@@ -108,7 +118,7 @@ const EkleButton = ({setItems}) => {
                 style={styles.input}
                 value={date ? formatDate(date) : ''}
                 editable={false}
-                placeholder="Etkinlik Tarihi"
+                placeholder="Tarihi seçin"
               />
             </TouchableOpacity>
             {showDatePicker && (
