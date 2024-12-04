@@ -1,4 +1,12 @@
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Calendar from '../components/calendar';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -8,8 +16,14 @@ const winWidth = Dimensions.get('window').width;
 
 const Index = () => {
   const [items, setItems] = useState({});
-  const [categories, setCategories] = useState([]); // categories bir dizi olarak tanımlandı
-  const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isOpen, setIsOpen] = useState(false); // Başlangıçta dropdown kapalı
+
+  const handleOutsidePress = () => {
+    if (isOpen) {
+      setIsOpen(false); // Dropdown'u kapat
+    }
+  };
 
   const data = [
     {label: 'Genel', value: 'Genel'},
@@ -87,41 +101,42 @@ const Index = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.selectListWrapper}>
-        <View style={styles.box}>
-          <Text style={styles.title}>Akademik Takvim</Text>
+    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+      <TouchableWithoutFeedback onPress={handleOutsidePress}>
+        <View style={styles.container}>
+          <View style={styles.selectListWrapper}>
+            <View style={styles.box}>
+              <Text style={styles.title}>Akademik Takvim</Text>
+            </View>
+            <View style={{width: '95%'}}>
+              <DropDownPicker
+                items={data}
+                open={isOpen}
+                setOpen={setIsOpen}
+                value={categories}
+                setValue={setCategories}
+                multiple={true}
+                placeholder="Kategori seçin"
+                mode="BADGE"
+                badgeColors="grey"
+                showBadgeDot={false}
+                badgeTextStyle={{color: 'white'}}
+                closeOnBlur={false}
+                style={styles.dropdownStyles}
+                onChangeValue={value => setCategories(value)}
+                dropDownContainerStyle={{
+                  borderColor: '#ddd',
+                }}
+              />
+            </View>
+          </View>
+          <Calendar categories={categories} items={items} />
+          <View style={{height: '15%'}}>
+            <EkleButton setItems={setItems} style={{flex: 0.2}} />
+          </View>
         </View>
-        <View style={{width: '95%'}}>
-          <DropDownPicker
-            items={data} // items, label ve value içermeli
-            open={isOpen}
-            setOpen={setIsOpen}
-            value={categories} // Kategoriler burada seçili değerler olacak
-            setValue={setCategories} // Seçilen değerleri güncellemek için
-            multiple={true} // Çoklu seçim aktif
-            mode="BADGE"
-            placeholder="Kategori seçin"
-            showBadgeDot={false}
-            dropdownTextStyles={styles.dropdownTextStyles}
-            dropdownStyles={styles.dropdownStyles}
-            boxStyles={styles.boxStyles}
-            searchPlaceholder="Ara"
-            showTickIcon={true}
-            showArrowIcon={true}
-            disableBorderRadius={false}
-            autoScroll
-            onChangeValue={value => setCategories(value)} // Seçilen kategorileri güncelle
-            badgeColors={'grey'} // Seçilen kategorilere göre renkleri atama
-            badgeTextStyle={{color: 'white'}}
-          />
-        </View>
-      </View>
-      <Calendar categories={categories} items={items} />
-      <View style={{height: '15%'}}>
-        <EkleButton setItems={setItems} style={{flex: 0.2}} />
-      </View>
-    </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -147,18 +162,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 70,
   },
-  boxStyles: {
-    width: '90%',
-    backgroundColor: '#fff',
-    borderColor: '#ddf',
-  },
-  dropdownTextStyles: {
-    fontSize: winWidth * 0.04,
-    color: '#333',
-  },
   dropdownStyles: {
-    maxHeight: 300,
-    width: winWidth * 0.9,
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
   },
 });
 
