@@ -28,15 +28,15 @@ const Index = () => {
   const data = [
     {label: 'Genel', value: 'Genel'},
     {label: 'Tıp Fakültesi', value: 'Tıp Fakültesi'},
-    {label: 'Dis Hekimligi', value: 'Diş Hekimliği Fakültesi'},
+    {label: 'Dis Hekimliği Fakültesi', value: 'Diş Hekimliği Fakültesi'},
     {label: 'Yaz Okulu', value: 'Yaz Okulu'},
     {
-      label: 'KurumiciYatayGecis',
+      label: 'Kurumiçi Yatay Geçiş',
       value: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
       data: 'Başvurmayı unutma',
     },
     {
-      label: 'KurumlararasıYatayGecis',
+      label: 'Kurumlararası Yatay Geçiş',
       value: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
     },
   ];
@@ -52,7 +52,7 @@ const Index = () => {
           data: 'Açıklama',
         },
       ],
-      '2024-11-12': [
+      '2024-12-12': [
         {
           name: 'Tıp Fakültesi Etkinliği',
           category: 'Tıp Fakültesi',
@@ -60,28 +60,28 @@ const Index = () => {
           data: 'Açıklama',
         },
       ],
-      '2024-11-13': [
+      '2024-12-13': [
         {
           name: 'Yaz Okulu Etkinliği',
           category: 'Yaz Okulu',
           description: 'Yaz okulu etkinliği açıklaması',
         },
       ],
-      '2024-11-14': [
+      '2024-12-14': [
         {
           name: 'Diş Hekimliği Konferans',
           description: 'Konferans',
           category: 'Diş Hekimliği Fakültesi',
         },
       ],
-      '2024-11-15': [
+      '2024-12-15': [
         {
           name: 'Kurumiçi yatay geçiş başvuru',
           description: 'Başvuru',
           category: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
         },
       ],
-      '2024-11-16': [
+      '2024-12-16': [
         {
           name: 'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş Başvuru',
           description: 'Başvuru',
@@ -89,7 +89,7 @@ const Index = () => {
             'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
         },
       ],
-      '2024-11-17': [
+      '2024-12-17': [
         {
           name: 'Tatil',
           description: 'Genel',

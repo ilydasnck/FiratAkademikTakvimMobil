@@ -22,7 +22,7 @@ const EkleButton = ({setItems}) => {
   const categoryData = [
     {key: 'Genel', value: 'Genel'},
     {key: 'Tıp Fakültesi', value: 'Tıp Fakültesi'},
-    {key: 'Dis Hekimligi', value: 'Diş Hekimliği Fakültesi'},
+    {key: 'Diş Hekimliği Fakültesi', value: 'Diş Hekimliği Fakültesi'},
     {key: 'Yaz Okulu', value: 'Yaz Okulu'},
     {
       key: 'KurumiciYatayGecis',
@@ -94,7 +94,8 @@ const EkleButton = ({setItems}) => {
 
       <Modal
         visible={isModalVisible}
-        animationType="slide"
+        animationType="fade"
+        transparent={true}
         onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -131,11 +132,11 @@ const EkleButton = ({setItems}) => {
             )}
             <Text>Kategori Seçin:</Text>
             <SelectList
-              style={styles.kategori}
               setSelected={setCategories}
               data={categoryData}
               save="value"
               placeholder="Kategori Seçin"
+              boxStyles={{borderWidth: 2, borderColor: '#ddd'}}
             />
             <View style={styles.yanyana}>
               <TouchableOpacity style={styles.button2} onPress={addEvent}>
@@ -199,22 +200,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '80%',
+    width: '90%',
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
+    elevation: 5,
+    shadowColor: 'black',
+    borderColor: '#ddd',
+    borderWidth: 1,
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-  },
-  kategori: {
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
