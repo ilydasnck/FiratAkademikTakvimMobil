@@ -61,20 +61,33 @@ const Calendar = ({categories, items}) => {
       event => categories.length === 0 || categories.includes(event.category),
     );
     if (eventsForDate.length > 0) {
-      filtered[date] = eventsForDate;
+      filtered[date] = eventsForDate.map(event => ({...event, date}));
     }
     return filtered;
   }, {});
 
   // Etkinliği Google Takvime eklemek için URL oluşturma
-  const addEventToGoogleCalendar = item => {
+  const addEventToGoogleCalendar = (item, date) => {
+    console.log('date,item', date, item);
+    if (!date) {
+      console.error('Date is undefined or invalid:', date);
+      return;
+    }
     const title = encodeURIComponent(item.name);
-    const details = encodeURIComponent(item.data);
-    const startDate = '20241104T090000Z'; // örnek başlangıç tarihi
-    const endDate = '20241104T100000Z'; // örnek bitiş tarihi
+    const details = encodeURIComponent(item.description || '');
+    const formattedDate = date ? date.replace(/-/g, '') : '';
 
+    if (!formattedDate) {
+      console.error('Invalid date format:', date);
+      return;
+    }
+
+    const startDate = `${formattedDate}T090000Z`;
+    const endDate = `${formattedDate}T100000Z`;
     const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${startDate}/${endDate}`;
-    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+    Linking.openURL(url).catch(err =>
+      console.error('Google Takvime bağlanırken hata oluştu:', err),
+    );
   };
 
   return (
@@ -104,9 +117,9 @@ const Calendar = ({categories, items}) => {
                     : 'lightblue',
               },
             ]}
-            onPress={() => addEventToGoogleCalendar(item)}>
+            onPress={() => addEventToGoogleCalendar(item, item.date)}>
             <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemData}>{item.data}</Text>
+            <Text style={styles.itemData}>{item.description}</Text>
           </TouchableOpacity>
         </View>
       )}

@@ -49,7 +49,8 @@ const Index = () => {
           name: 'Tıp Fakültesi Etkinliği',
           category: 'Tıp Fakültesi',
           description: 'Tıp Fakültesi etkinliği açıklaması',
-          data: 'Açıklama',
+
+          date: '2024-01-01'
         },
       ],
       '2024-12-12': [
@@ -57,7 +58,7 @@ const Index = () => {
           name: 'Tıp Fakültesi Etkinliği',
           category: 'Tıp Fakültesi',
           description: 'Tıp Fakültesi etkinliği açıklaması',
-          data: 'Açıklama',
+          date: '2024-12-12'
         },
       ],
       '2024-12-13': [
@@ -65,6 +66,7 @@ const Index = () => {
           name: 'Yaz Okulu Etkinliği',
           category: 'Yaz Okulu',
           description: 'Yaz okulu etkinliği açıklaması',
+          date: '2024-12-13'
         },
       ],
       '2024-12-14': [
@@ -72,6 +74,7 @@ const Index = () => {
           name: 'Diş Hekimliği Konferans',
           description: 'Konferans',
           category: 'Diş Hekimliği Fakültesi',
+          date: '2024-12-14'
         },
       ],
       '2024-12-15': [
@@ -79,6 +82,7 @@ const Index = () => {
           name: 'Kurumiçi yatay geçiş başvuru',
           description: 'Başvuru',
           category: 'Önlisans ve Lisans Programlarına Kurumiçi Yatay Geçiş',
+          date: '2024-12-15'
         },
       ],
       '2024-12-16': [
@@ -87,6 +91,7 @@ const Index = () => {
           description: 'Başvuru',
           category:
             'Önlisans ve Lisans Programlarına Kurumlararası Yatay Geçiş',
+          date: '2024-12-16'
         },
       ],
       '2024-12-17': [
@@ -94,6 +99,7 @@ const Index = () => {
           name: 'Tatil',
           description: 'Genel',
           category: 'Genel',
+          date: '2024-12-17'
         },
       ],
     };
